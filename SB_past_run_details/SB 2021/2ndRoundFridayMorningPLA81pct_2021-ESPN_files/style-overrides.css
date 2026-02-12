@@ -1,0 +1,13 @@
+@media screen and (min-width: 1024px) {
+	#global-nav .sports .team > .nav-logo-wrap {
+		float: left;
+		margin: 3px 0 0 0 !important;
+		max-height: 25px;
+		padding: 0 0 0 0 !important;
+		width: 35px;
+	}
+
+	#global-nav>ul>li.pillar.espnplus {
+		display: none !important;
+	}
+}

@@ -1,0 +1,13 @@
+Does "AI" actually work? Unfortunately, too often what has been hyped doesn't happen. I promised earlier this month to test some technology live. Let's see the results.
+
+
+Here's the test: (a) Can you pick a "bracket" for the NCAA men's basketball 64-team single elimination tournament, using just a little bit of human input? (b) Can you beat others that have been using sophisticated systems, scouting reports, monte carlo, machine learning, etc., to do the same thing?
+
+
+We did the test in 2017--and Forbes complimented us as the "number 1 way to pick a bracket." Perhaps it was a fluke! Let's see this year. 
+
+
+Below is a screenshot of the SmartBracket national pick. After one full round, it is beating 8 out of 10 brackets done by fans across the country, many who worked on them for hours. I spent less than 5 minutes. 
+
+
+This app uses decision intelligence methods that Supported Intelligence, LLC, offered to consumers in 2019 and again earlier this month. It helps solve sequential decision problems, like those in business, military, and personal life.

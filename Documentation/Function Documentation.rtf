@@ -1,0 +1,513 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1343\cocoasubrtf140
+{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red34\green139\blue34;}
+\margl1440\margr1440\vieww14200\viewh16500\viewkind0
+\deftab720
+\pard\pardeftab720
+
+\f0\fs20 \cf2 March Madness Model\
+Function Documentation\
+\
+Model Functions:\
+\
+% YAHOOCRAWLER a script to collect and format the national percentages\
+					of Yahoo Pick\'92em entrants who are choosing each\
+					team to enter each round.\
+\
+% ESPNCRAWLER a script to collect and format BPI ratings for each team \
+			in the NCAA tournament from ESPN\'92s website.\
+\
+% MAIN_MARCHMADNESS     A script for composing and solving the March
+\fs24 \cf0 \
+
+\fs20 \cf2 %                       Madness model. The March Madness Model models the
+\fs24 \cf0 \
+
+\fs20 \cf2 %                       decision process of filling out a bracket. The
+\fs24 \cf0 \
+
+\fs20 \cf2 %                       solution to the March Madness model is a
+\fs24 \cf0 \
+
+\fs20 \cf2 %                       recommended bracket to maximize one's score
+\fs24 \cf0 \
+
+\fs20 \cf2 %                       relative to one's opponents in a bracket pool.\
+\pard\pardeftab720
+
+\fs24 \cf0 \
+\pard\pardeftab720
+
+\fs20 \cf2 % CREATESTATES_MM create one state for each game in a 64-team single
+\fs24 \cf0 \
+
+\fs20 \cf2 %                 elimination tournament and one absorbing state. The game
+\fs24 \cf0 \
+
+\fs20 \cf2 %                 states are organized first by "region" (group of 16 teams)
+\fs24 \cf0 \
+
+\fs20 \cf2 %                 and within each region ascending by round. Then the tournament
+\fs24 \cf0 \
+
+\fs20 \cf2 %                 semifinals and final are organized ascending by round.\
+\pard\pardeftab720
+
+\fs24 \cf0 \
+\pard\pardeftab720
+
+\fs20 \cf2 % CREATESEEDING   creates a vector to convert a list of 64 teams as listed
+\fs24 \cf0 \
+
+\fs20 \cf2 %                 in the traditional March Madness bracket structure to
+\fs24 \cf0 \
+
+\fs20 \cf2 %                 their individual region seeding. Each region is offset by
+\fs24 \cf0 \
+
+\fs20 \cf2 %                 16.\
+\
+% CREATENONCONDITIONAL_MM   determines the statistical likelihood of each
+\fs24 \cf0 \
+
+\fs20 \cf2 %                           team reaching a each round of a 64 team single
+\fs24 \cf0 \
+
+\fs20 \cf2 %                           elimination tournament given each team's
+\fs24 \cf0 \
+
+\fs20 \cf2 %                           likelihood of winning against each possible
+\fs24 \cf0 \
+
+\fs20 \cf2 %                           opponent in the tournament.\
+\
+%   CALCWINPROBS_MM         determines each team's change of winning
+\fs24 \cf0 \
+
+\fs20 \cf2 %                           against each opposing team in a 64 team single 
+\fs24 \cf0 \
+
+\fs20 \cf2 %                           elimination tournament given each team's 
+\fs24 \cf0 \
+
+\fs20 \cf2 %                           Basketball Power Index (BPI) rating.\
+\
+% CREATEPREFERENCES_MM  calculates the percentage of brackets in a pool who
+\fs24 \cf0 \
+
+\fs20 \cf2 %                       picked each team to advance to each round.
+\fs24 \cf0 \
+
+\fs20 \cf2  \
+\pard\pardeftab720
+
+\fs24 \cf0 \
+\pard\pardeftab720
+
+\fs20 \cf2 % PICKSPARSER2015     Imports the statistical chance of each team reaching each
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     round and the percentage of opponents who have selected
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     each team to reach each round.
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     Calculates the expectedScore and compositeScore, two
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     two components of expected relative score, which are inputs
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     to the expected relative score and desirability calculations 
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     for populating the reward matrix.\
+\pard\pardeftab720
+
+\fs24 \cf0 \
+\pard\pardeftab720
+
+\fs20 \cf2 % CREATEREWARDS_MM  CREATEREWARDS_MM determines the "desireability" of
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     choosing each team to advance to each round.
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     Desireability is equivalent to the cumulative
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     expected relative score of a team reaching the current
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     round and all previous round. The expected relative
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     score of a given team reaching a given round is calculated
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     using an estimate of the given team's likelihood of reaching
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     that round combined with the percentage of opponents
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     who chose the given team to advance to a given round.\
+\
+% CREATETRANSITIONS_MM    Starting from the final game and working backwards,
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         CREATETRANSITIONS_MM determines in which games 
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         (states) in the previous round
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         an agent would have make his or her team selection
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         after making a selection in a given game (state) 
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         in the current round. From this information
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         CREATETRANSITIONS_MM creates a transition matrix
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         specifying all states to transition to for each 
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         action (picking each team) in each state (game).
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         An agent transitions with certainty to each and all
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         of the states (games) where he or she will need to
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         make another team selection.
+\fs24 \cf0 \
+
+\fs20 \cf2 \
+% DETERMINEROUND_MM   Determines the round in a 64 single elimination
+\fs24 \cf0 \
+
+\fs20 \cf2 %                     tournament of a given game index.\
+\
+Post Model Functions:\
+\
+% CREATEBINTREE_MM   Creates (recursively) a binary tree of depth 'depth' and 
+\fs24 \cf0 \
+
+\fs20 \cf2 %                 grafts it to the root node of an existing tree t.
+\fs24 \cf0 \
+
+\fs20 \cf2 % 
+\fs24 \cf0 \
+
+\fs20 \cf2 % Inputs:     depth       An integer specifying the depth of the binary tree.
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         A value of zero or one will return a tree with no
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         additional nodes.
+\fs24 \cf0 \
+
+\fs20 \cf2 %             t           (Optional) The tree whose root will be the root of
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         the binary tree.
+\fs24 \cf0 \
+
+\fs20 \cf2 % Outputs:    t           A binary tree of depth 'depth'
+\fs24 \cf0 \
+\
+\
+
+\fs20 \cf2 % LIKELYPATH_MM  Determines the branching likely path of the March Madness
+\fs24 \cf0 \
+
+\fs20 \cf2 % Model. The Likely path is the state path traversed when taking the value
+\fs24 \cf0 \
+
+\fs20 \cf2 % maximizing action and experiencing the most likely transition.
+\fs24 \cf0 \
+
+\fs20 \cf2 % 
+\fs24 \cf0 \
+
+\fs20 \cf2 % Inputs:     Out         A solved Out structure of the March Madness Model
+\fs24 \cf0 \
+
+\fs20 \cf2 % 
+\fs24 \cf0 \
+
+\fs20 \cf2 %             slist       The starting state from which to calculate the 
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         branching likely path
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         
+\fs24 \cf0 \
+
+\fs20 \cf2 % Outputs:    Stree       A tree structure of the states traversed in the 
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         branching likely path.
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         
+\fs24 \cf0 \
+
+\fs20 \cf2 %             Ptree       A tree structure of the value maximizing policy in
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         the states traversed in the branching likely path.
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         
+\fs24 \cf0 \
+
+\fs20 \cf2 %             Rtree       A tree structure of the reward experienced when
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         taking the value maximizing action in each state 
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         traversed in the branching likely path.
+\fs24 \cf0 \
+\
+
+\fs20 \cf2 % CREATE2014_MM Creates an empty NCAA tournament bracket tree structure with
+\fs24 \cf0 \
+
+\fs20 \cf2 % the 2014 teams at the leaves and the game indices (corresponding to 
+\fs24 \cf0 \
+
+\fs20 \cf2 % state indices in the March Madness Model) at the nodes.
+\fs24 \cf0 \
+
+\fs20 \cf2 % 
+\fs24 \cf0 \
+
+\fs20 \cf2 % Inputs:     teamNames   cell array of names (strings) of the 64 teams in the 
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         2014 NCAA tournament)
+\fs24 \cf0 \
+
+\fs20 \cf2 %             seeding     64x1 vector containing the relative order of the 64 teams
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         as they would apper in a conventional bracket. Reading 
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         top down and then left to right)
+\fs24 \cf0 \
+
+\fs20 \cf2 %         
+\fs24 \cf0 \
+
+\fs20 \cf2 % Outputs:    tree2014    Empty 2014 NCAA bracket tree
+\fs24 \cf0 \
+
+\fs20 \cf2 %             roundIdxs   Cell array of vectors of nodes of tree2014, one for
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         each round.
+\fs24 \cf0 \
+
+\fs20 \cf2 %             sequence    Symmetrical cell array to roundIdxs. Contains the
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         game (state) index of each node (found in the
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         corresponding location in roundIdxs).
+\fs24 \cf0 \
+\
+
+\fs20 \cf2 % CREATEBRACKET_MM creates a filled out bracket from a branching likely
+\fs24 \cf0 \
+
+\fs20 \cf2 %                  path generated from a solved March Madness Model.\
+\
+% BRACKET2PICKS_MM Creates a 1x63 picks vector from a 63 node bracket tree
+\fs24 \cf0 \
+
+\fs20 \cf2 % 
+\fs24 \cf0 \
+
+\fs20 \cf2 % Inputs:     bracket         A 63 node tree of bracket choices. Each node
+\fs24 \cf0 \
+
+\fs20 \cf2 %                             must contain a string corresponding to an
+\fs24 \cf0 \
+
+\fs20 \cf2 %                             element of the teamNames cell array.
+\fs24 \cf0 \
+
+\fs20 \cf2 %             teamNames       A 64x1 cell array of team names (strings)
+\fs24 \cf0 \
+
+\fs20 \cf2 %             seeding         A 64x1 vector specifying the order as would be 
+\fs24 \cf0 \
+
+\fs20 \cf2 %                             seen on a traditional NCAA bracket of the 64
+\fs24 \cf0 \
+
+\fs20 \cf2 %                             teams in the teamNames cell array.
+\fs24 \cf0 \
+
+\fs20 \cf2 % Outputs:    A 1x63 vector of picks for an NCAA tournament 
+\fs24 \cf0 \
+\
+
+\fs20 \cf2 % BRACKETSCORE_MM Scores a bracket specified by 'picks' per traditional NCAA
+\fs24 \cf0 \
+
+\fs20 \cf2 % bracket scoring rules assuming the true results are stored in 'results'
+\fs24 \cf0 \
+
+\fs20 \cf2 % 
+\fs24 \cf0 \
+
+\fs20 \cf2 % Inputs:     picks       A 63x1 vector of team choices to fill out an NCAA
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         bracket
+\fs24 \cf0 \
+
+\fs20 \cf2 %             results     A 63x1 vector of the true results of an NCAA
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         tournament
+\fs24 \cf0 \
+
+\fs20 \cf2 % Ouputs:     score       The score of the 'picks' bracket per traditional
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         NCAA bracket scoring
+\fs24 \cf0 \
+
+\fs20 \cf2 %             perf        A 1x63 vector containing the locations of the games
+\fs24 \cf0 \
+
+\fs20 \cf2 %                         which were correct in the 'picks' vector
+\fs24 \cf0 \
+\
+
+\fs20 \cf2 % BRACKETVIZ_MM     This function displays a bracket for the March Madness
+\fs24 \cf0 \
+
+\fs20 \cf2 %                   basketball tournament. Winners are chosen according to
+\fs24 \cf0 \
+
+\fs20 \cf2 %                   the bracket tree structure\
+\
+Simulation Functions:
+\fs24 \cf0 \
+\
+
+\fs20 \cf2 % SIMULATEBRACKETS_MM   creates a pool of brackets from the percentage of
+\fs24 \cf0 \
+
+\fs20 \cf2 %                       field who have chosen each team to advance to each
+\fs24 \cf0 \
+
+\fs20 \cf2 %                       round.
+\fs24 \cf0 \
+\
+
+\fs20 \cf2 % SMALLPOOLSIM_MULTIPLE_MM2015  A script to generate a group of pools (based
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               on the percentage of the field who have
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               picked each team to advance to each round)
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               Use the march madness model to determine
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               the the optimal bracket to enter each pool
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               and simulate tournament results over a
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               number of years (in which the true
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               statistical chance of each team winning is
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               slightly different than the expectation -
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               and all years are simulated off a win
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               distribution which has a slight random
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               variatino from year to year). Compare
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               performance of the optimal bracket against
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               all other brackets in each pool and a
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               "statistical favorite" bracket, "highest
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               seed" bracket, and a "average national
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               preference" bracket over all simulated
+\fs24 \cf0 \
+
+\fs20 \cf2 %                               tournaments.\
+\
+% TWOPERSONPOOLSIM_MM   a script to determine the optimal bracket against a
+\fs24 \cf0 \
+
+\fs20 \cf2 %                       particular opponent and simulate performance over \
+%				multiple years of tournament results
+\fs24 \cf0 \
+
+\fs20 \cf2 %
+\fs24 \cf0 \
+
+\fs20 \cf2 %                           Specific variations:
+\fs24 \cf0 \
+
+\fs20 \cf2 %                             createSeedBracket
+\fs24 \cf0 \
+
+\fs20 \cf2 %                             createPrefBracket2015
+\fs24 \cf0 \
+
+\fs20 \cf2 %                             createStatBracket
+\fs24 \cf0 \
+
+\fs20 \cf2 %                             createDicksBracket2015
+\fs24 \cf0 \
+
+\fs20 \cf2 %                             createObamaBracket2015\
+\
+Testing Functions\
+\
+\pard\pardeftab720
+
+\fs24 \cf0 \
+\
+\
+}
