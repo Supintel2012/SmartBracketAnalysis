@@ -1,0 +1,9 @@
+{
+  "name": "smart-bracket-analysis",
+  "public": true,
+  "routes": [
+    { "src": "/investor", "dest": "/investor.html" },
+    { "src": "/student", "dest": "/student.html" },
+    { "src": "/partner", "dest": "/partner.html" }
+  ]
+}

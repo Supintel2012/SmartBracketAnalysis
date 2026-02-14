@@ -56,6 +56,7 @@
       color: rgba(255,255,255,0.6);
       font-size: 0.88rem; font-weight: 600;
       cursor: pointer; transition: all .2s;
+      touch-action: manipulation;
     }
     .tab-btn.active, .tab-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
     .year-panel { display: none; }
@@ -150,6 +151,7 @@
       font-size: 0.95rem;
       text-decoration: none;
       transition: transform .15s, box-shadow .15s;
+      touch-action: manipulation;
     }
     .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
     .btn-primary { background: var(--accent); color: #fff; }
@@ -327,6 +329,12 @@
     footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
     footer a:hover { color: var(--gold); }
 
+    /* ─── Persona Bar ────────────────────────────────────────── */
+    .persona-bar { background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.55rem 1rem; flex-wrap: wrap; }
+    .persona-bar span { font-size: 0.78rem; color: rgba(255,255,255,0.45); }
+    .persona-pill { display: inline-block; font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.85rem; border-radius: 2rem; border: 1px solid rgba(255,255,255,0.18); text-decoration: none; color: rgba(255,255,255,0.7); background: transparent; transition: all .2s; }
+    .persona-pill:hover { border-color: var(--gold); color: var(--gold); }
+
     @media (max-width: 640px) {
       .stat-item { min-width: 50%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
       .bar-label { width: 130px; }
@@ -345,9 +353,18 @@
     <li><a href="#ai-competition">vs. AI</a></li>
     <li><a href="#patents">Patents</a></li>
     <li><a href="#beyond">Beyond Brackets</a></li>
-    <li><a href="#ambassador">Ambassador Kit</a></li>
+    <li><a href="#partnership">Partner</a></li>
+    <li><a href="#ambassador">Q&amp;A</a></li>
   </ul>
 </nav>
+
+<!-- ── Persona Bar ────────────────────────────────────────────── -->
+<div class="persona-bar" style="background:rgba(0,0,0,0.25);">
+  <span>View for:</span>
+  <a href="investor.html" class="persona-pill">Investor</a>
+  <a href="partner.html" class="persona-pill">Partner / BD</a>
+  <a href="student.html" class="persona-pill">Student / User</a>
+</div>
 
 <!-- ── Hero ──────────────────────────────────────────────────── -->
 <section class="hero">
@@ -357,6 +374,7 @@
   <div class="hero-cta">
     <a href="https://smartbracket.io" class="btn btn-primary" target="_blank" rel="noopener">Try SmartBracket →</a>
     <a href="#algorithm" class="btn btn-outline">See How It Works</a>
+    <a href="#partnership" class="btn btn-outline">Partner With Us</a>
   </div>
 </section>
 
@@ -400,12 +418,12 @@
       <div class="step">
         <div class="step-num">2</div>
         <h3>Compute Win Probabilities</h3>
-        <p>Load team-specific historical win probabilities — not just seed rankings — calibrated across 10+ years of tournament data.</p>
+        <p>Win probabilities are updated after each play-in game prior to bracket lock, blending our proprietary Bayesian ratings (half weight) with a composite of leading third-party rating systems — plus real-time adjustments for injuries, travel distance, and in-tournament momentum.</p>
       </div>
       <div class="step">
         <div class="step-num">3</div>
         <h3>Factor In Crowd Picks</h3>
-        <p>Import ESPN's pre-tournament pick distributions. Unpopular teams who win generate disproportionate gains in any pool.</p>
+        <p>Import pre-tournament pick distributions from a major bracket platform. Unpopular teams who win generate disproportionate gains in any pool — making this data integration a key differentiator.</p>
       </div>
       <div class="step">
         <div class="step-num">4</div>
@@ -420,7 +438,7 @@
       <div class="step">
         <div class="step-num">6</div>
         <h3>One-Click Output</h3>
-        <p>Receive your optimal bracket with color-coded recommendations in seconds. Print or share directly to ESPN, Yahoo, or any pool platform.</p>
+        <p>Receive your optimal bracket with color-coded recommendations in seconds. Print or regenerate as many times as you like — optimized for each pool you're entering.</p>
       </div>
     </div>
   </div>
@@ -431,7 +449,7 @@
   <div class="container">
     <div class="section-label" style="color:#ff8c5a">The Core Equation</div>
     <h2>Why Picking the Favorite Isn't Enough</h2>
-    <p class="lead">Our reward function is the key innovation — and it's protected by patent.</p>
+    <p class="lead">The underlying innovations — and SmartBracket's proprietary extensions built on top of them — are protected by patent.</p>
 
     <div class="equation-card">
       <div class="eq-line">reward(team) = (1 − pickChance) + (N × statChance − 1) + priorRound</div>
@@ -451,7 +469,7 @@
       </div>
     </div>
 
-    <p style="color:rgba(255,255,255,0.55); font-size:0.9rem;">The optimal pick is <strong style="color:var(--gold)">not always the most likely winner</strong>. It's the pick that maximizes expected pool standing across all 63 decisions simultaneously — solved via the Bellman optimality equation from operations research.</p>
+    <p style="color:rgba(255,255,255,0.55); font-size:0.9rem;">The optimal pick is <strong style="color:var(--gold)">not always the most likely winner</strong>. It's the pick that maximizes expected pool standing across all 63 decisions simultaneously — solved via the Bellman optimality equation — with SmartBracket's patented reward structure and sequential framing built on top of this foundational framework.</p>
   </div>
 </section>
 
@@ -501,12 +519,12 @@
       <div class="step">
         <div class="step-num" style="background: var(--teal);">📊</div>
         <h3>Variance Matters</h3>
-        <p>AI bracket tools are lottery tickets: occasionally brilliant, often mediocre. SmartBracket's mathematical approach is <strong>designed for consistency</strong> — enter the same pool for 5 years and the edge compounds.</p>
+        <p>AI bracket tools are lottery tickets: occasionally brilliant, often mediocre. SmartBracket's mathematical approach is <strong>designed for consistency</strong> — reproducible, structured performance you can rely on year after year.</p>
       </div>
       <div class="step">
         <div class="step-num" style="background: var(--blue);">🔬</div>
         <h3>Real Data, Real Pools</h3>
-        <p>Performance is benchmarked against <strong>actual ESPN bracket challenge results</strong> across the full distribution of millions of entries — not cherry-picked simulations.</p>
+        <p>Performance is benchmarked against <strong>real bracket challenge results</strong> across the full distribution of millions of public entries — not cherry-picked simulations.</p>
       </div>
     </div>
   </div>
@@ -680,7 +698,7 @@
         </table>
       </div>
       <div class="ai-insight">
-        <strong>2025 headline:</strong> AI improved dramatically from 2024. Claude Sonnet 3.7 won the field at 98.4% — but the 12-model AI cohort averaged only <strong>71.8th percentile</strong>, spanning a wild 41%–98% range. The SmartBracket cohort (including additional user entries) averaged <strong>~80.9th percentile</strong>. SmartBracket's zero-configuration 1-click entry (68.8%) still beat ESPN's own Smart Bracket tool, DeepSeek, O3 Mini, and all pick-the-favorites methods.
+        <strong>2025 headline:</strong> AI improved dramatically from 2024. Claude Sonnet 3.7 won the field at 98.4% — but the 12-model AI cohort averaged only <strong>71.8th percentile</strong>, spanning a wild 41%–98% range. The SmartBracket cohort (including additional user entries) averaged <strong>~80.9th percentile</strong>. Crucially, SmartBracket's zero-configuration 1-click entry (68.8%) outperformed the chalk benchmark, DeepSeek, O3 Mini, and all pick-the-favorites methods — illustrating the gap that a major platform integration could close for millions of users.
       </div>
     </div>
 
@@ -816,7 +834,7 @@
 <section id="beyond" style="background: var(--light);">
   <div class="container">
     <div class="section-label">Enterprise Platform</div>
-    <h2>Brackets Are the Demo.<br>The Enterprise Is the Business.</h2>
+    <h2>Brackets Are Proof.<br>The Platform Scales Far Beyond.</h2>
     <p class="lead">The same Rapid Recursive® math that optimizes brackets also powers 16+ enterprise solution templates across industries where a 5–15% improvement translates to millions of dollars.</p>
 
     <div class="template-grid">
@@ -872,9 +890,9 @@
 <!-- ── Ambassador Kit ─────────────────────────────────────────── -->
 <section id="ambassador" class="kit-section">
   <div class="container">
-    <div class="section-label" style="color:#ff8c5a">Student Ambassador Kit</div>
+    <div class="section-label" style="color:#ff8c5a">Q&A Reference Kit</div>
     <h2>Ready Answers for Every Question</h2>
-    <p class="lead" style="color:rgba(255,255,255,0.6)">Use these when talking to classmates, professors, or anyone curious about SmartBracket.</p>
+    <p class="lead" style="color:rgba(255,255,255,0.6)">Concise answers to the questions partners, investors, and users ask most.</p>
 
     <div class="kit-grid">
       <div class="qa-card">
@@ -901,6 +919,39 @@
         <div class="qa-q">"How is this different from advanced stats sites?"</div>
         <div class="qa-a">Advanced stats sites predict game winners. SmartBracket optimizes for <em>pool performance</em> — a fundamentally different objective. Knowing Duke has a 70% chance of winning a game is different from knowing whether picking Duke helps or hurts your expected pool ranking.</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Partnership ───────────────────────────────────────────── -->
+<section id="partnership" style="background: var(--light);">
+  <div class="container">
+    <div class="section-label">Licensing &amp; Integration</div>
+    <h2>Built to Power a Major Platform</h2>
+    <p class="lead">SmartBracket's patented engine is designed for integration — white-labeled inside an existing bracket experience or delivered as a standalone branded product.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num" style="background: var(--teal);">🤝</div>
+        <h3>White-Label Integration</h3>
+        <p>Embed SmartBracket's optimization engine directly into an existing bracket platform. Users get dramatically better results; the platform gets a proven, patented differentiator.</p>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background: var(--blue);">📡</div>
+        <h3>Data Feed Partnership</h3>
+        <p>Integrate a platform's own pick-popularity data to further sharpen SmartBracket's crowd-exploitation model — a flywheel that gets more valuable as the user base grows.</p>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background: var(--accent);">🔒</div>
+        <h3>Protected IP, Clean Deal</h3>
+        <p>Five international patents (US, JP, KR) valid through 2033–2035 mean clear ownership and a defensible exclusive licensing arrangement for the right partner.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:2.5rem; padding: 2rem; background: var(--navy); border-radius: var(--radius); text-align:center;">
+      <p style="font-size:1.15rem; color: var(--white); font-weight: 600; margin-bottom: 0.5rem;">Interested in a licensing or integration conversation?</p>
+      <p style="color:rgba(255,255,255,0.6); margin-bottom:1.5rem;">Reach out to discuss white-label deals, data partnerships, or co-branded bracket experiences.</p>
+      <a href="https://www.supportedintelligence.com" class="btn btn-primary" target="_blank" rel="noopener">Contact Supported Intelligence →</a>
     </div>
   </div>
 </section>

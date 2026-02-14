@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartBracket — Win Your Bracket Pool</title>
+  <style>
+    :root {
+      --navy:   #0d1b2e;
+      --blue:   #1a3c6e;
+      --accent: #e85d26;
+      --gold:   #f5a623;
+      --teal:   #0fa3b1;
+      --white:  #f8f9fa;
+      --gray:   #6c757d;
+      --light:  #eef1f5;
+      --font-head: 'Georgia', serif;
+      --font-body: 'system-ui', -apple-system, sans-serif;
+      --radius: 10px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.12);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--white); color: var(--navy); line-height: 1.65; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: var(--navy); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 60px; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+    .nav-brand { color: var(--white); font-size: 1.1rem; font-weight: 700; letter-spacing: 0.04em; }
+    .nav-brand span { color: var(--accent); }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.9rem; transition: color .2s; }
+    .nav-links a:hover { color: var(--gold); }
+
+    .persona-bar { background: rgba(15,163,177,0.1); border-bottom: 1px solid rgba(15,163,177,0.2); display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.55rem 1rem; flex-wrap: wrap; }
+    .persona-bar span { font-size: 0.78rem; color: var(--gray); }
+    .persona-pill { display: inline-block; font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.85rem; border-radius: 2rem; border: 1px solid #dde3ec; text-decoration: none; color: var(--navy); background: var(--white); transition: all .2s; }
+    .persona-pill:hover { border-color: var(--teal); color: var(--teal); }
+    .persona-pill.active { background: var(--teal); color: white; border-color: var(--teal); }
+
+    .hero { background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 60%, #1e4d8c 100%); color: var(--white); padding: 6rem 2rem 5rem; text-align: center; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); pointer-events: none; }
+    .hero-eyebrow { display: inline-block; background: rgba(15,163,177,0.2); border: 1px solid rgba(15,163,177,0.5); color: var(--teal); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 1rem; border-radius: 2rem; margin-bottom: 1.5rem; }
+    .hero h1 { font-family: var(--font-head); font-size: clamp(2.2rem, 5vw, 4rem); line-height: 1.15; margin-bottom: 1.25rem; }
+    .hero h1 em { color: var(--gold); font-style: normal; }
+    .hero p { font-size: 1.2rem; color: rgba(255,255,255,0.8); max-width: 620px; margin: 0 auto 2.5rem; }
+    .hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn { display: inline-block; padding: 0.85rem 2rem; border-radius: var(--radius); font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: transform .15s, box-shadow .15s; touch-action: manipulation; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-teal { background: var(--teal); color: #fff; }
+    .btn-outline { background: transparent; border: 2px solid rgba(255,255,255,0.5); color: #fff; }
+
+    .stat-bar { background: var(--navy); border-top: 1px solid rgba(255,255,255,0.08); display: flex; flex-wrap: wrap; justify-content: center; }
+    .stat-item { flex: 1; min-width: 160px; padding: 1.75rem 2rem; text-align: center; border-right: 1px solid rgba(255,255,255,0.08); }
+    .stat-item:last-child { border-right: none; }
+    .stat-number { font-size: 2.4rem; font-weight: 700; color: var(--gold); line-height: 1; }
+    .stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.3rem; }
+
+    section { padding: 5rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.6rem; }
+    h2 { font-family: var(--font-head); font-size: clamp(1.7rem, 3vw, 2.5rem); color: var(--navy); margin-bottom: 1rem; }
+    .lead { font-size: 1.1rem; color: var(--gray); max-width: 640px; margin-bottom: 3rem; }
+
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+    .step { background: var(--white); border: 1px solid #dde3ec; border-radius: var(--radius); padding: 1.75rem; box-shadow: var(--shadow); transition: transform .2s, box-shadow .2s; }
+    .step:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.14); }
+    .step-num { width: 36px; height: 36px; background: var(--accent); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem; margin-bottom: 1rem; }
+    .step h3 { font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--navy); }
+    .step p { font-size: 0.9rem; color: var(--gray); }
+
+    /* Fun highlight box */
+    .highlight-box { background: linear-gradient(135deg, rgba(232,93,38,0.08), rgba(245,166,35,0.08)); border: 1px solid rgba(232,93,38,0.2); border-radius: var(--radius); padding: 2rem; margin-bottom: 2.5rem; }
+    .highlight-box h3 { color: var(--navy); font-size: 1.15rem; margin-bottom: 0.5rem; }
+    .highlight-box p { color: var(--gray); font-size: 0.95rem; }
+
+    /* vs comparison */
+    .vs-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; margin-bottom: 2.5rem; }
+    .vs-side { background: var(--white); border: 1px solid #dde3ec; border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); }
+    .vs-side.bad { border-color: #f9c6c0; background: #fff8f7; }
+    .vs-side.good { border-color: rgba(232,93,38,0.3); background: rgba(232,93,38,0.04); }
+    .vs-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; }
+    .vs-label.red { color: #c0392b; }
+    .vs-label.green { color: var(--accent); }
+    .vs-bullet { font-size: 0.9rem; color: var(--navy); margin-bottom: 0.4rem; }
+    .vs-bullet::before { content: '✗  '; color: #e74c3c; }
+    .vs-bullet.ok::before { content: '✓  '; color: var(--teal); }
+    .vs-divider { text-align: center; font-size: 1.4rem; font-weight: 700; color: var(--gray); }
+
+    /* Performance */
+    .perf-section { background: var(--light); }
+    .chart-area { background: var(--white); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow); margin-bottom: 2rem; }
+    .bar-chart { display: flex; flex-direction: column; gap: 1rem; }
+    .bar-row { display: flex; align-items: center; gap: 1rem; }
+    .bar-label { width: 180px; font-size: 0.9rem; font-weight: 600; color: var(--navy); flex-shrink: 0; }
+    .bar-outer { flex: 1; height: 36px; background: #e9edf3; border-radius: 4px; overflow: hidden; }
+    .bar-inner { height: 100%; border-radius: 4px; display: flex; align-items: center; justify-content: flex-end; padding-right: 0.6rem; font-size: 0.82rem; font-weight: 700; color: white; transition: width 1.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .bar-sb { background: linear-gradient(90deg, #1a3c6e, #e85d26); }
+    .bar-ai { background: linear-gradient(90deg, #444, #888); }
+    .bar-naive { background: #bcc5d3; color: #555; }
+    .perf-note { font-size: 0.85rem; color: var(--gray); margin-top: 0.5rem; }
+
+    /* AI table */
+    .ai-section { background: var(--navy); color: var(--white); }
+    .ai-section h2 { color: var(--white); }
+    .ai-section .lead { color: rgba(255,255,255,0.6); }
+    .ai-year-tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .tab-btn { padding: 0.5rem 1.25rem; border-radius: 2rem; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: rgba(255,255,255,0.6); font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all .2s; touch-action: manipulation; }
+    .tab-btn.active, .tab-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .year-panel { display: none; }
+    .year-panel.active { display: block; }
+    .ai-table-wrap { overflow-x: auto; }
+    table.ai-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .ai-table th { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.55); text-transform: uppercase; letter-spacing: 0.07em; font-size: 0.75rem; padding: 0.75rem 1rem; text-align: left; }
+    .ai-table td { padding: 0.65rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.06); vertical-align: middle; }
+    .ai-table tr:last-child td { border-bottom: none; }
+    .ai-table tr:hover td { background: rgba(255,255,255,0.03); }
+    .row-sb td { background: rgba(232,93,38,0.08); }
+    .row-sb:hover td { background: rgba(232,93,38,0.14) !important; }
+    .row-winner td { background: rgba(245,166,35,0.08); }
+    .tag { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; padding: 0.15rem 0.55rem; border-radius: 2rem; }
+    .tag-sb { background: rgba(232,93,38,0.25); color: #ff8c5a; }
+    .tag-ai { background: rgba(15,163,177,0.2); color: var(--teal); }
+    .tag-bench { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+    .mini-bar { height: 8px; border-radius: 4px; display: inline-block; vertical-align: middle; margin-left: 0.5rem; }
+    .verify-link { color: var(--teal); text-decoration: none; font-size: 0.8rem; }
+    .verify-link:hover { text-decoration: underline; }
+    .ai-insight { margin-top: 1.5rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; padding: 1.25rem 1.5rem; font-size: 0.9rem; color: rgba(255,255,255,0.75); }
+    .ai-insight strong { color: var(--gold); }
+
+    /* Q&A */
+    .kit-section { background: var(--navy); color: var(--white); }
+    .kit-section h2 { color: var(--white); }
+    .kit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .qa-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius); padding: 1.5rem; }
+    .qa-q { color: var(--gold); font-weight: 700; font-size: 0.92rem; margin-bottom: 0.6rem; }
+    .qa-a { color: rgba(255,255,255,0.78); font-size: 0.88rem; }
+
+    footer { background: var(--navy); border-top: 1px solid rgba(255,255,255,0.08); text-align: center; padding: 2rem; color: rgba(255,255,255,0.4); font-size: 0.82rem; }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    footer a:hover { color: var(--gold); }
+
+    @media (max-width: 640px) {
+      .stat-item { min-width: 50%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+      .bar-label { width: 130px; }
+      nav .nav-links { display: none; }
+      .vs-grid { grid-template-columns: 1fr; }
+      .vs-divider { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Smart<span>Bracket</span></div>
+  <ul class="nav-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#vs-ai">vs. AI</a></li>
+    <li><a href="#qa">Questions</a></li>
+    <li><a href="https://smartbracket.io" target="_blank" rel="noopener">Try It →</a></li>
+  </ul>
+</nav>
+
+<div class="persona-bar">
+  <span>Viewing as:</span>
+  <a href="investor.html" class="persona-pill">Investor</a>
+  <a href="partner.html" class="persona-pill">Partner / BD</a>
+  <a href="student.html" class="persona-pill active">Student / User</a>
+  <a href="tech-showcase.html" class="persona-pill">Full Overview</a>
+</div>
+
+<section class="hero">
+  <div class="hero-eyebrow">March Madness Bracket Optimizer</div>
+  <h1>Stop Guessing.<br><em>Start Winning.</em></h1>
+  <p>SmartBracket uses the same mathematical framework as financial portfolio optimization to build brackets that beat your pool — not just predict game winners. 10 years of results back it up.</p>
+  <div class="hero-cta">
+    <a href="https://smartbracket.io" class="btn btn-primary" target="_blank" rel="noopener">Try SmartBracket for $5 →</a>
+    <a href="#how" class="btn btn-outline">See How It Works</a>
+  </div>
+</section>
+
+<div class="stat-bar">
+  <div class="stat-item">
+    <div class="stat-number">~90<sup style="font-size:1.2rem">th</sup></div>
+    <div class="stat-label">Percentile 10-Year Average</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">$5</div>
+    <div class="stat-label">Cost Per Bracket</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">400%</div>
+    <div class="stat-label">Expected ROI in a $10 Pool</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">63</div>
+    <div class="stat-label">Games Optimized Together</div>
+  </div>
+</div>
+
+<!-- The Core Insight -->
+<section id="insight">
+  <div class="container">
+    <div class="section-label">The Key Insight</div>
+    <h2>You're Not Trying to Pick<br>Every Winner — You're Trying<br>to Beat Everyone <em>Else</em></h2>
+    <p class="lead">That's a fundamentally different problem. And it's the one SmartBracket actually solves.</p>
+
+    <div class="vs-grid">
+      <div class="vs-side bad">
+        <div class="vs-label red">Everyone Else's Approach</div>
+        <p class="vs-bullet">Pick whoever ESPN says is most likely to win</p>
+        <p class="vs-bullet">Fill your bracket with chalk favorites</p>
+        <p class="vs-bullet">Finish around 50th percentile — same as everyone who did the same thing</p>
+        <p class="vs-bullet">Wonder why you never win your pool</p>
+      </div>
+      <div class="vs-divider">VS</div>
+      <div class="vs-side good">
+        <div class="vs-label green">SmartBracket's Approach</div>
+        <p class="vs-bullet ok">Ask: "What bracket maximizes my <em>expected rank</em> in my pool?"</p>
+        <p class="vs-bullet ok">Strategically pick a few key underdogs that most of your pool ignores</p>
+        <p class="vs-bullet ok">If that underdog wins, you leapfrog half your pool in one game</p>
+        <p class="vs-bullet ok">10-year average: ~90th percentile</p>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <h3>The math behind it: picking Duke when 90% of your pool does earns almost nothing even if Duke wins — because everyone else scores too. Picking the 10% underdog who actually wins moves you past most of your pool in a single game.</h3>
+      <p style="margin-top:0.75rem;">SmartBracket calculates exactly how much each pick is worth in your specific pool, weighing statistical probability against crowd popularity — then solves all 63 decisions together, so later rounds inform earlier picks.</p>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section id="how" style="background:var(--light);">
+  <div class="container">
+    <div class="section-label">The Technology</div>
+    <h2>How SmartBracket Actually Works</h2>
+    <p class="lead">Six steps that turn a messy 63-decision problem into a single optimal bracket — personalized to your specific pool.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Map All 63 Decisions</h3>
+        <p>The entire tournament is modeled as a network of interdependent choices — like a chess game where every pick affects what picks matter later. This is what makes it a <em>sequential</em> problem, not 63 independent coin flips.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Calculate Win Probabilities</h3>
+        <p>Blends SmartBracket's proprietary team ratings (half weight) with leading third-party systems, updated after play-in games. Real-time adjustments for injuries, travel distance, and in-tournament momentum.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Pull In Crowd Pick Data</h3>
+        <p>Import pre-tournament pick distributions from a major bracket platform. This is a key differentiator: knowing which teams 80% of pools are picking lets the algorithm find the "hidden value" in unpopular-but-capable teams.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>Solve the Full Bracket</h3>
+        <p>Run the optimization over all 63 decisions at once, finding the single bracket that maximizes expected pool standing. Not "who's most likely to win each game" — but "what combination of picks gives me the best shot at beating my pool."</p>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <h3>Personalize to Your Pool</h3>
+        <p>Answer 3 quick questions about your pool (size, scoring system, anything you know about your competition). The algorithm shifts team values by ±20% to exploit your specific competitors' tendencies.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <h3>One Click, Done</h3>
+        <p>Receive your color-coded optimal bracket in seconds. Print it or regenerate for each pool you're entering — the algorithm re-optimizes fresh for every different pool context.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Results -->
+<section id="results" class="perf-section">
+  <div class="container">
+    <div class="section-label">Real Results</div>
+    <h2>10 Years of Beating<br>the Field</h2>
+    <p class="lead">Not a simulation — every result is a real bracket entered before the tournament, scored against millions of real ESPN entries.</p>
+
+    <div class="chart-area">
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">SmartBracket<br><small style="font-weight:400;color:#888">10-Year Average</small></div>
+          <div class="bar-outer"><div class="bar-inner bar-sb" style="width:90%;">~90th percentile</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">SmartBracket<br><small style="font-weight:400;color:#888">2025</small></div>
+          <div class="bar-outer"><div class="bar-inner bar-sb" style="width:80.9%;">80.9th percentile</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">AI Tools Average<br><small style="font-weight:400;color:#888">2025</small></div>
+          <div class="bar-outer"><div class="bar-inner bar-ai" style="width:71.8%;">71.8th percentile</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Just Pick Favorites<br><small style="font-weight:400;color:#888">Naive Approach</small></div>
+          <div class="bar-outer"><div class="bar-inner bar-naive" style="width:50%;">~50th percentile</div></div>
+        </div>
+      </div>
+      <p class="perf-note">* AI tools ranged from 41%–98% in 2025. Great in a lucky year, mediocre on average. SmartBracket's value is <strong>consistency year after year.</strong></p>
+    </div>
+
+    <div class="steps" style="margin-top:0">
+      <div class="step">
+        <div class="step-num" style="background:var(--gold);color:var(--navy);">💰</div>
+        <h3>The $5 ROI Case</h3>
+        <p>In a 100-person $10 pool: random entry gets you ~$1 expected. SmartBracket at 80–90th percentile gets you <strong>$10–20 expected on a $5 purchase.</strong> That's a 200–400% expected return. Most people spend $10–20 on far worse odds.</p>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:var(--teal);">🎯</div>
+        <h3>Consistency, Not Luck</h3>
+        <p>AI tools are lottery tickets — Claude had a great 2025, but O3 Mini finished at 41%. SmartBracket's mathematical approach is designed for <strong>repeatable performance</strong> you can count on every March, not a lucky year you can't replicate.</p>
+      </div>
+      <div class="step">
+        <div class="step-num" style="background:var(--blue);">📋</div>
+        <h3>Verifiable, Public Records</h3>
+        <p>Every bracket listed has a live ESPN link. Entered before tip-off. Scored against 20+ million real entries. You don't have to take anyone's word for it — click through and check yourself.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI Comparison -->
+<section id="vs-ai" class="ai-section">
+  <div class="container">
+    <div class="section-label" style="color:#ff8c5a">2025 Head-to-Head Results</div>
+    <h2>SmartBracket vs. Every AI Tool</h2>
+    <p class="lead">All brackets entered before the tournament. Scored against 20+ million real ESPN entries. Here's exactly how everyone did:</p>
+
+    <div class="ai-year-tabs">
+      <button class="tab-btn active" onclick="showYear('y2025',this)">2025 — Full AI Field</button>
+      <button class="tab-btn" onclick="showYear('y2024',this)">2024 — First ChatGPT Test</button>
+      <button class="tab-btn" onclick="showYear('y2023',this)">2023 — Early Days</button>
+    </div>
+
+    <div class="year-panel active" id="y2025">
+      <div class="ai-table-wrap">
+        <table class="ai-table">
+          <thead><tr><th>Rank</th><th>Bracket</th><th>Type</th><th>Percentile</th><th>Verify</th></tr></thead>
+          <tbody>
+            <tr class="row-winner"><td>1</td><td>Claude Sonnet 3.7</td><td><span class="tag tag-ai">AI</span></td><td><span style="color:var(--gold);font-weight:700">98.4%</span></td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2025/bracket?id=088d7d70-039b-11f0-8546-f1c95cf89588" target="_blank">ESPN ↗</a></td></tr>
+            <tr><td>2</td><td>Grok 3 (xAI)</td><td><span class="tag tag-ai">AI</span></td><td>85.1%</td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2025/bracket?id=78b9a8f0-036c-11f0-b736-1f0403741a26" target="_blank">ESPN ↗</a></td></tr>
+            <tr><td>3</td><td>Perplexity DeepResearch</td><td><span class="tag tag-ai">AI</span></td><td>84.5%</td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2025/bracket?id=2070b7b0-038f-11f0-9660-0d52d3605833" target="_blank">ESPN ↗</a></td></tr>
+            <tr class="row-sb"><td>5</td><td><strong>SmartBracket (3Q-Midwest)</strong></td><td><span class="tag tag-sb">SmartBracket</span></td><td><strong>77.7%</strong></td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2025/bracket?id=6e9565c0-0507-11f0-9da0-0b02cce4e84e" target="_blank">ESPN ↗</a></td></tr>
+            <tr><td>6</td><td>ChatGPT 4.5</td><td><span class="tag tag-ai">AI</span></td><td>75.9%</td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2025/bracket?id=af5a4a60-0509-11f0-90b9-91b7228049d4" target="_blank">ESPN ↗</a></td></tr>
+            <tr><td>9</td><td>ESPNBet Chalk (pick favorites)</td><td><span class="tag tag-bench">Benchmark</span></td><td>71.1%</td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2025/bracket?id=fe81d770-059a-11f0-90b9-91b7228049d4" target="_blank">ESPN ↗</a></td></tr>
+            <tr class="row-sb"><td>11</td><td><strong>SmartBracket 1-Click (no setup)</strong></td><td><span class="tag tag-sb">SmartBracket</span></td><td><strong>68.8%</strong></td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2025/bracket?id=5fc3ef40-0362-11f0-8c36-d58fad34d9c5" target="_blank">ESPN ↗</a></td></tr>
+            <tr><td>14</td><td>DeepSeek R1</td><td><span class="tag tag-ai">AI</span></td><td>51.0%</td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2025/bracket?id=ffd89190-039c-11f0-ba45-49b7dff8a965" target="_blank">ESPN ↗</a></td></tr>
+            <tr><td>16</td><td>O3 Mini (OpenAI)</td><td><span class="tag tag-ai">AI</span></td><td>41.2%</td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2025/bracket?id=3e599620-039e-11f0-b3ff-f56ba6ce6f00" target="_blank">ESPN ↗</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ai-insight"><strong>2025 bottom line:</strong> AI tools had wild variance — from 41% to 98%. The average AI bracket finished at 71.8th percentile. SmartBracket's cohort averaged <strong>80.9th percentile</strong>. Even the zero-configuration 1-click entry (no pool questions answered) outperformed DeepSeek, O3 Mini, and just "picking the favorites." If you want to consistently beat your pool — not just get lucky once — there's a structural difference.</div>
+    </div>
+
+    <div class="year-panel" id="y2024">
+      <div class="ai-table-wrap">
+        <table class="ai-table">
+          <thead><tr><th>Bracket</th><th>Type</th><th>Percentile</th><th>Verify</th></tr></thead>
+          <tbody>
+            <tr class="row-sb"><td><strong>SmartBracket National</strong></td><td><span class="tag tag-sb">SmartBracket</span></td><td><strong style="color:var(--gold)">97.4%</strong></td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2024/bracket?id=9d17ed90-e713-11ee-beae-9167d93d8668" target="_blank">ESPN ↗</a></td></tr>
+            <tr class="row-sb"><td><strong>SmartBracket (Popular)</strong></td><td><span class="tag tag-sb">SmartBracket</span></td><td><strong>93.8%</strong></td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2024/bracket?id=0fcc6310-e710-11ee-b28c-c51af1c3e59d" target="_blank">ESPN ↗</a></td></tr>
+            <tr class="row-sb"><td><strong>SmartBracket (Personal)</strong></td><td><span class="tag tag-sb">SmartBracket</span></td><td><strong>89.6%</strong></td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2024/bracket?id=ab1007f0-e62f-11ee-8d16-4bef1c6940d3" target="_blank">ESPN ↗</a></td></tr>
+            <tr><td>ChatGPT (standalone — first test ever)</td><td><span class="tag tag-ai">AI</span></td><td style="color:#ff6b6b">45.7% — below average</td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2024/bracket?id=09a97540-e729-11ee-b2a2-d165ed155245" target="_blank">ESPN ↗</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ai-insight"><strong>2024:</strong> ChatGPT's first year as a standalone bracket predictor. It finished at 45.7% — <em>below the average person</em> in a random pool. SmartBracket's best bracket hit <strong>97.4%</strong>. Knowing who's likely to win games is not the same as knowing what bracket beats your pool.</div>
+    </div>
+
+    <div class="year-panel" id="y2023">
+      <div class="ai-table-wrap">
+        <table class="ai-table">
+          <thead><tr><th>Bracket</th><th>Type</th><th>Percentile</th><th>Verify</th></tr></thead>
+          <tbody>
+            <tr class="row-sb"><td><strong>SmartBracket 1-Click</strong></td><td><span class="tag tag-sb">SmartBracket</span></td><td><strong>83.2%</strong></td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2023/bracket?id=0a860c69-cdc9-3e42-a90a-876e7b3af7c0" target="_blank">ESPN ↗</a></td></tr>
+            <tr class="row-sb"><td><strong>ChatGPT → SmartBracket (hybrid)</strong></td><td><span class="tag tag-sb">SmartBracket</span></td><td><strong>83.2%</strong></td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2023/bracket?id=9032d0ed-8c28-3bf9-b0b7-5d7f33329780" target="_blank">ESPN ↗</a></td></tr>
+            <tr><td>Naïve power-rankings bracket</td><td><span class="tag tag-bench">Benchmark</span></td><td style="color:#ff6b6b">14.6%</td><td><a class="verify-link" href="https://fantasy.espn.com/games/tournament-challenge-bracket-2023/bracket?id=f662187e-a728-3adf-9919-4d0b2110a306" target="_blank">ESPN ↗</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ai-insight"><strong>2023:</strong> We tested using ChatGPT's analysis as an input to SmartBracket. It tied the pure algorithm at exactly 83.2% — confirming that the <em>optimization step</em> is what matters, not just the data source. The naïve power-rankings bracket finished at 14.6%. Picking the "best" teams is genuinely a losing strategy.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Q&A -->
+<section id="qa" class="kit-section">
+  <div class="container">
+    <div class="section-label" style="color:#ff8c5a">Questions You're Probably Asking</div>
+    <h2>Straight Answers</h2>
+    <p class="lead" style="color:rgba(255,255,255,0.6)">The things people actually want to know before they try it.</p>
+
+    <div class="kit-grid">
+      <div class="qa-card">
+        <div class="qa-q">"Why not just use ChatGPT for free?"</div>
+        <div class="qa-a">ChatGPT had one great year in 2025 (98th percentile) and a bad year in 2024 (below average). SmartBracket has averaged ~90th percentile over 10 years. It's the difference between a lottery ticket and a consistent edge. Plus: $5 investment with a realistic shot at $100–200 in a typical pool is a great expected return.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-q">"Isn't this just picking favorites with extra steps?"</div>
+        <div class="qa-a">Actually the opposite — it's specifically about <em>not</em> doing that. Picking the most likely winner every game gets you to the 50th percentile because everyone else does the same thing. SmartBracket explicitly calculates which picks have leverage in your specific pool vs. which ones are just going with the crowd.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-q">"How hard is this to use?"</div>
+        <div class="qa-a">There's a 1-click option that generates your optimal bracket without any setup — it finished 2025 at 68.8th percentile. If you answer 3 quick questions about your pool, you unlock additional personalization. Most people are done in under 5 minutes.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-q">"What are the 3 pool questions about?"</div>
+        <div class="qa-a">SmartBracket asks about your pool's size, scoring system, and anything you know about your competition's tendencies. Bigger pools reward more contrarian picks. Heavier upset-round scoring changes which teams are worth risking. The algorithm adjusts accordingly.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-q">"How do I know the results are real?"</div>
+        <div class="qa-a">Every bracket listed has a public ESPN Tournament Challenge link. You can click through right now and verify each result yourself — entered before tip-off, scored against millions of real entries. No simulations, no cherry-picking.</div>
+      </div>
+      <div class="qa-card">
+        <div class="qa-q">"Is it worth $5?"</div>
+        <div class="qa-a">In a 100-person pool with a $10 entry fee: SmartBracket at ~80th percentile implies roughly $10–20 expected payout vs. ~$1 for a random bracket. That's a 200–400% expected return on a $5 spend. Even in a bad year, the math holds — you're not playing lottery odds, you're playing a systematic edge.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="background:var(--light);">
+  <div class="container" style="text-align:center;">
+    <div class="section-label">Ready to Try It?</div>
+    <h2>Your Pool Starts in March.</h2>
+    <p class="lead" style="margin:0 auto 2rem;">Spend $5 on a mathematically optimized bracket. Get personalized picks in minutes. Beat your friends, your coworkers, your family — with science.</p>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <a href="https://smartbracket.io" class="btn btn-primary" target="_blank" rel="noopener">Try SmartBracket for $5 →</a>
+      <a href="#how" class="btn btn-outline" style="color:var(--navy);border-color:var(--navy);">How It Works</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p style="margin-bottom:0.5rem"><a href="https://smartbracket.io" target="_blank">smartbracket.io</a> &nbsp;·&nbsp; <a href="https://www.supportedintelligence.com" target="_blank">supportedintelligence.com</a></p>
+  <p>Rapid Recursive® is a registered trademark of Supported Intelligence LLC. SmartBracket™ is a trademark of Supported Intelligence LLC.</p>
+  <p style="margin-top:0.4rem">© 2016–present Supported Intelligence, LLC. All rights reserved.</p>
+</footer>
+
+<script>
+  const bars = document.querySelectorAll('.bar-inner');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.style.opacity = '1'; });
+  }, { threshold: 0.2 });
+  bars.forEach(b => {
+    b.style.opacity = '0';
+    const w = b.style.width;
+    b.style.width = '0%';
+    setTimeout(() => { b.style.width = w; }, 100);
+    observer.observe(b);
+  });
+  function showYear(id, btn) {
+    document.querySelectorAll('.year-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
